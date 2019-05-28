@@ -1,18 +1,28 @@
 const express=require('express');
 const router=new express.Router();
 const User=require('../model/user');
-router.post('/users',(req,res)=>{
-    console.log('User',req.body);
-    const user=new User(req.body);
-    user.save().then(()=>{
-        console.log('User successfully created!');
-        res.status(201).send(user);
-    }).catch((e)=>{
-        res.status(400).send(e);
-    })
+const auth= require('../middleware/auth');
+// router.post('/users',async(req,res)=>{
+//     console.log('User',req.body);
+//     const user=new User(req.body);
+//     try{
+//         await user.save()
+//         const token = user.generateAuthToken()
+//         res.status(201).send({user,token});        
+//     }catch(e){
+//         res.status(400).send(e);
+//     }
+    // user.save().then(()=>{
+        // console.log('User successfully created!');
+        // res.status(201).send(user);
+    // }).catch((e)=>{
+        // res.status(400).send(e);
+    // })
+// })
+router.post('/users/me',async(req,res)=>{
+   res.send(req.user);
 })
-
-router.get('/users',(req,res)=>{
+router.get('/users',auth,(req,res)=>{
     User.find({}).then((users)=>{
         res.send(users);
     }).catch((e)=>{
@@ -63,13 +73,13 @@ router.delete('/users/:id',async function(req,res){
         res.status(500).send();
     }
 })
-router.post('/users/login',async function(req,res){
+router.post('/users/login',async (req,res)=>{
     try{
         console.log('req.body-----',req.body);
-        const user= await User.findByCredentials(req.body.email,req,body.password);
+        const user= await User.findByCredentials(req.body.email,req.body.password);
+        const token = await user.generateAuthToken();
         console.log('User------',user);
-        
-        res.send(user);
+        res.send({user,token});
     }catch(e){
         res.status(400).send();
     }
