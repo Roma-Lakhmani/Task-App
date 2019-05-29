@@ -46,11 +46,13 @@ const userSchema=new mongoose.Schema({
             type:'String',
             required :true
         }]        
-    }]
+    }],
+},{
+    timestamps:true
 });
 // ------------it does not store in db it is to figure the relation between models
 userSchema.virtual('tasks', {
-    ref: 'Task',
+    ref: 'Tasks',
     localField: '_id',
     foreignField: 'owner'
 })
