@@ -48,10 +48,18 @@ const userSchema=new mongoose.Schema({
         }]        
     }]
 });
+// ------------it does not store in db it is to figure the relation between models
+userSchema.virtual('tasks', {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'owner'
+})
+
 //method for all users
 userSchema.statics.findByCredentials= async (email,password)=>{
     console.log('user----------',email,password);
     const user= await User.findOne({email});
+    console.log('user----------',email,password);
     
     if(!user){
         throw new Error('Unable to login!')
@@ -83,6 +91,34 @@ userSchema.pre('save',async function(next){
     console.log('Just before saving!');
     next();// to tell that task before saving is over otherwise it will be hanged here
 })
+// Method to return current token not all the tokens
 
+// userSchema.methods.getPublicProfile=function(){
+//    const user=this;
+//    console.log('user',user);
+//    const userObject=user.toObject()
+//    console.log('userObject',userObject);
+   
+//    delete userObject.password
+//    delete userObject.tokens
+//    console.log('userObject2',userObject);
+
+//    return userObject;
+// }
+
+// Method to return current token not all the tokens
+
+userSchema.methods.toJSON=function(){
+    const user=this;
+    console.log('user',user);
+    const userObject=user.toObject()
+    console.log('userObject',userObject);
+    
+    delete userObject.password
+    delete userObject.tokens
+    console.log('userObject2',userObject);
+ 
+    return userObject;
+ } // called when object is send inside res.send so name changed from  getPublicProfile to toJSON
 const User = mongoose.model('User', userSchema)
 module.exports=User;

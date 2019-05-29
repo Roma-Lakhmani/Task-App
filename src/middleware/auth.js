@@ -6,13 +6,19 @@ const auth=async(req,res,next)=>{
     // console.log('auth middleware');
     try{
         const token=  req.header('Authorization').replace('Bearer ','');
+        console.log('token',token);
         const decoded = jwt.verify(token,'thisismytoken');
-        const user=User.findOne({'_id':decoded._id,'tokens.token':token});
-        // console.log('user',user);
+        console.log('decoded',decoded,decoded._id);
+        const user=await User.findOne({'_id':decoded._id,'tokens.token':token});
 
+        // console.log('user._id,user.tokens.token',user._id,user.tokens.token);
         if(!user){
+            console.log('err---');
+            
             throw new Error()
         }
+        req.token=token;
+        console.log('req.token',req.token);
         req.user=user;
         next();
 

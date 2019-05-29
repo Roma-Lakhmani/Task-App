@@ -1,13 +1,23 @@
 const express=require('express');
 const router=new express.Router();
 const Task=require('../model/task');
-router.post('/tasks',(req,res)=>{
-    const task1=new Task(req.body);
-    task1.save().then(()=>{
+const auth=require('../middleware/auth')
+//middleware us added to indicate that task is created by authenticated user
+router.post('/tasks',auth,async(req,res)=>{
+    // const task1=new Task(req.body);
+    // task1.save().then(()=>{
+    //     res.status(201).send(task1);
+    // }).catch((err)=>{
+    //     res.status(400).send(e);
+    // })
+    const task1=new Task({...req.body,
+    owner:req.user._id});
+    try{
+        await task1.save()
         res.status(201).send(task1);
-    }).catch((err)=>{
+    }catch(e){
         res.status(400).send(e);
-    })
+    }
 })
 router.get('/tasks',(req,res)=>{
     Task.find({}).then((tasks)=>{

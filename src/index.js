@@ -31,9 +31,13 @@ app.listen(port,()=>{
     
 })
 
+
 // router.get('/test',(req,res)=>{
 //     res.send('This is from my other router!');
 // })
+
+//----------concept of bcrypt------------
+
 // const bcrypt= require('bcryptjs')
 
 // const  myFunction=async ()=>{
@@ -45,6 +49,8 @@ app.listen(port,()=>{
 //     console.log(isMatch);
     
 // }
+//----------concept of jwt------------
+
 // const jwt = require('jsonwebtoken');
 // const myFunction=async()=>{
 //     const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Y2VkMGFiNWYyMGFkOTNlYjViOTk5ZTQiLCJpYXQiOjE1NTkwNDIyMTAsImV4cCI6MTU1OTY0NzAxMH0.8lfSLQTDOYipOP36nIkyWHkJlx1lrOUWv7ocsfTYqRk'
@@ -54,3 +60,32 @@ app.listen(port,()=>{
     
 // }
 // myFunction();
+//----------concept of toJSON------------
+// const pet={
+//     name:'Hal'
+// }
+// pet.toJSON=function(){
+//     // console.log('this',this);
+//     // return this;
+//     return {};
+// }
+// console.log('After stringify',JSON.stringify(pet));
+
+//----------concept of ref to a model to fetch its profile------------
+
+const Task=require('./model/task');
+// const main =async ()=>{
+//     const task =await Task.findById('5cee58cd1da7c92e1b4b3948');
+//     await task.populate('owner').execPopulate();
+//     console.log(task.owner);
+    
+// }
+
+const User=require('./model/user')
+const main =async ()=>{
+    const user =await User.findById('5cee5002388b6f2bebd04151')
+    console.log('usee',user);
+    await user.populate('tasks').execPopulate()
+    console.log(user.tasks)
+}
+main();     
