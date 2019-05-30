@@ -73,7 +73,7 @@ app.listen(port,()=>{
 
 //----------concept of ref to a model to fetch its profile------------
 
-const Task=require('./model/task');
+// const Task=require('./model/task');
 // const main =async ()=>{
 //     const task =await Task.findById('5cee58cd1da7c92e1b4b3948');
 //     await task.populate('owner').execPopulate();
@@ -81,11 +81,11 @@ const Task=require('./model/task');
     
 // }
 
-const User=require('./model/user')
-const main =async ()=>{
-    const user =await User.findById('5cee5002388b6f2bebd04151')
-    console.log('usee',user);
-    await user.populate('tasks').execPopulate()
-    console.log(user.tasks)
-}
-main();     
+// const User=require('./model/user')
+// const main =async ()=>{
+//     const user =await User.findById('5cee5002388b6f2bebd04151')
+//     console.log('usee',user);
+//     await user.populate('tasks').execPopulate()
+//     console.log(user.tasks)
+// }
+// main();     

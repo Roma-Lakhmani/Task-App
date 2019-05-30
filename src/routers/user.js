@@ -2,6 +2,7 @@ const express=require('express');
 const router=new express.Router();
 const User=require('../model/user');
 const auth= require('../middleware/auth');
+const multer=require('multer')
 router.post('/users',async(req,res)=>{
     console.log('User',req.body);
     const user=new User(req.body);
@@ -97,6 +98,7 @@ router.patch('/users/me',auth,async function(req,res){
 //         res.status(500).send();
 //     }
 // })
+
 // User can delete himself only not other users
 router.delete('/users/me',auth,async function(req,res){
     try{
@@ -138,5 +140,35 @@ router.post('/users/logoutAll',auth,async (req,res)=>{
     }catch(e){
         res.status(500).send();
     }
+})
+// -----------------upload file-------------------
+const upload = multer({
+    dest: 'avatars',//fieldname
+    limits: {
+        fileSize: 1000000
+    },//filesize
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error('Please upload an image'))
+        }//filetype
+
+        cb(undefined, true)
+    }
+})
+
+router.post('/users/me/avatar', upload.single('avatar'), (req, res) => {
+    res.send()
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+})
+// ------------upload multiple----------------------
+
+const upload1 = multer({
+    dest: 'multiple',
+})
+router.post('/users/photos/upload', upload1.array('photos', 12), (req, res) => {
+    res.send()
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
 })
 module.exports=router;

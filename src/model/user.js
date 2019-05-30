@@ -1,7 +1,8 @@
 const mongoose=require('mongoose');
 const validator=require('validator');
 const bcrypt=require('bcryptjs');
-const jwt=require('jsonwebtoken'); 
+const jwt=require('jsonwebtoken');
+const Task=require('./task'); 
 // Create schema in order to take use middleware so as to execute something before or after an event;
 const userSchema=new mongoose.Schema({
     name:{
@@ -122,5 +123,13 @@ userSchema.methods.toJSON=function(){
  
     return userObject;
  } // called when object is send inside res.send so name changed from  getPublicProfile to toJSON
+
+
+ //Method to delete task when user is removed
+ userSchema.pre('remove',async function(next){
+    const user=this;
+    await Task.deleteMany({'owner':user._id})
+    next();
+ })
 const User = mongoose.model('User', userSchema)
 module.exports=User;
